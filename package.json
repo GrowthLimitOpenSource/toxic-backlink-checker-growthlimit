@@ -1,17 +1,43 @@
 {
   "name": "growthlimit-toxic-backlink-checker",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "description": "Local-first backlink evidence audit with DataForSEO retrieval, representative-page inspection, human review, and draft disavow exports.",
+  "license": "Apache-2.0",
+  "author": "GrowthLimit.com",
+  "homepage": "https://www.growthlimit.com/tools/toxic-backlink-checker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker/issues"
+  },
+  "keywords": [
+    "seo",
+    "backlinks",
+    "backlink-audit",
+    "disavow",
+    "dataforseo"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "audit": "tsx --env-file=.env.local src/cli.ts"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "next": "16.2.10",
+    "p-limit": "^7.3.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -21,6 +47,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.1",
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }
