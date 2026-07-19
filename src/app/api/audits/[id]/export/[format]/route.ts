@@ -1,4 +1,5 @@
 import { getAudit } from "@/lib/store";
+import { AUDIT_COLUMNS, auditRows, buildAuditXlsx } from "@/lib/exports";
 
 function csvCell(value: unknown) { const text = typeof value === "string" ? value : JSON.stringify(value); return `"${text.replaceAll('"', '""')}"`; }
 export async function GET(_: Request, { params }: { params: Promise<{ id: string; format: string }> }) {
@@ -6,10 +7,9 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   const report = await getAudit(id);
   if (format === "json") return file(JSON.stringify(report, null, 2), "application/json", `${report.target}-audit.json`);
   if (format === "txt") return file(report.proposedDisavow, "text/plain", `${report.target}-draft-disavow.txt`);
+  if (format === "xlsx") return file(toArrayBuffer(buildAuditXlsx(report)), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", `${report.target}-audit.xlsx`, false);
   if (format === "csv") {
-    const header = ["domain", "classification", "approved", "confidence", "links", "follow_links", "top_anchor", "evidence", "note"];
-    const rows = report.groups.map((g) => [g.domain, g.classification, g.approved, g.confidence, g.links.length, g.followCount, g.anchors[0]?.value || "", g.evidence.map((e) => `${e.code}: ${e.detail}`).join(" | "), g.note]);
-    return file([header, ...rows].map((row) => row.map(csvCell).join(",")).join("\n"), "text/csv", `${report.target}-audit.csv`);
+    return file([[...AUDIT_COLUMNS], ...auditRows(report)].map((row) => row.map(csvCell).join(",")).join("\n"), "text/csv", `${report.target}-audit.csv`);
   }
   if (format === "html") {
     const groups = report.groups.map((g) => `<tr><td>${escape(g.domain)}</td><td>${g.classification}</td><td>${g.links.length}</td><td>${Math.round(g.confidence * 100)}%</td><td>${escape(g.evidence.map((e) => e.label).join(", ") || "No risk cluster")}</td></tr>`).join("");
@@ -17,5 +17,6 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   }
   return new Response("Unknown format", { status: 404 });
 }
-function file(body: string, type: string, name: string) { return new Response(body, { headers: { "Content-Type": `${type}; charset=utf-8`, "Content-Disposition": `attachment; filename="${name}"`, "Cache-Control": "no-store" } }); }
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer { const buffer = new ArrayBuffer(bytes.byteLength); new Uint8Array(buffer).set(bytes); return buffer; }
+function file(body: BodyInit, type: string, name: string, charset = true) { return new Response(body, { headers: { "Content-Type": charset ? `${type}; charset=utf-8` : type, "Content-Disposition": `attachment; filename="${name}"`, "Cache-Control": "no-store" } }); }
 function escape(value: string) { return value.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]!); }

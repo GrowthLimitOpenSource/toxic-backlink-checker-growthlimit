@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { runAudit } from "./lib/audit";
+import { buildAuditXlsx } from "./lib/exports";
 
 function argument(name: string) { const index = process.argv.indexOf(name); return index >= 0 ? process.argv[index + 1] : undefined; }
 async function main() {
@@ -10,7 +11,7 @@ async function main() {
   const report = await runAudit({ target, maxBacklinks: Number(argument("--max-backlinks") || 25000), inspectPages: Number(argument("--inspect-pages") || 100), existingDisavow: existing ? await readFile(existing, "utf8") : "", useLlm: process.argv.includes("--llm") });
   const output = path.resolve(argument("--output") || `./reports/${report.target}`);
   await mkdir(output, { recursive: true });
-  await Promise.all([writeFile(path.join(output, "audit.json"), JSON.stringify(report, null, 2)), writeFile(path.join(output, "draft-disavow.txt"), report.proposedDisavow)]);
+  await Promise.all([writeFile(path.join(output, "audit.json"), JSON.stringify(report, null, 2)), writeFile(path.join(output, "audit.xlsx"), buildAuditXlsx(report)), writeFile(path.join(output, "draft-disavow.txt"), report.proposedDisavow)]);
   console.log(`Audit complete: ${report.source.rowsRetrieved} rows, ${report.groups.length} referring domains, $${(report.source.cost || 0).toFixed(4)} DataForSEO cost.`);
   console.log(`Reports: ${output}`);
 }

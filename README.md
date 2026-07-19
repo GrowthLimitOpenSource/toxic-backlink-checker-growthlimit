@@ -1,6 +1,6 @@
 # Toxic Backlink Checker by GrowthLimit.com
 
-A local-first backlink audit application. It retrieves backlink rows from DataForSEO, deduplicates and groups them, identifies evidence patterns, inspects representative public pages, supports optional LLM summaries, preserves an existing disavow file, and exports HTML, CSV, JSON, and a human-reviewed Google-format draft.
+A local-first backlink audit application. It retrieves backlink rows from DataForSEO, deduplicates and groups them, identifies evidence patterns, inspects representative public pages, supports optional LLM summaries, preserves an existing disavow file, and exports HTML, CSV, XLSX, JSON, and a human-reviewed Google-format draft.
 
 The methodology comes from Growth Limit's [evidence-based toxic backlink guide](https://www.growthlimit.com/blog/identifying-toxic-backlinks). The full illustrated setup guide is at [growthlimit.com/tools/toxic-backlink-checker](https://www.growthlimit.com/tools/toxic-backlink-checker).
 
@@ -21,7 +21,7 @@ The methodology comes from Growth Limit's [evidence-based toxic backlink guide](
 - `KEEP`, `REVIEW`, `REMOVE_URL`, `DISAVOW_URL`, and `DISAVOW_DOMAIN` review states
 - Existing-disavow parsing, deduplication, self-domain protection, and merge
 - Interactive local review with explicit approval for every disavow entry
-- HTML, CSV, JSON, and draft-disavow downloads
+- HTML, CSV, XLSX, JSON, and draft-disavow downloads
 - CLI workflow and browser workflow
 - Optional OpenAI-compatible LLM evidence summaries after deterministic grouping
 - Versioned reports containing the application version and rule-set version
@@ -118,7 +118,7 @@ npm run audit -- --domain example.com \
   --llm
 ```
 
-The CLI writes `audit.json` and `draft-disavow.txt`.
+The CLI writes `audit.json`, `audit.xlsx`, and `draft-disavow.txt`.
 
 ## Optional LLM setup
 
