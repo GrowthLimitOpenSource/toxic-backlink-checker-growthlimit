@@ -1,0 +1,54 @@
+name: Feature request
+description: Propose a focused improvement to the Toxic Backlink Checker.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Explain the user problem before proposing an implementation. Keep requests inside the project's local-first, evidence-based, human-approval workflow.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Who encounters the problem, and what can they not do today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the observable result without prescribing unnecessary implementation details.
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Example workflow
+      description: Walk through one concrete example using synthetic data.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why this belongs in the project
+      description: Explain how the change supports backlink evidence collection, human review, safe export, installation, or maintenance.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Cost, privacy, and safety considerations
+      description: Note new API costs, credential handling, data retention, network access, migration requirements, or disavow risks.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and pull requests for this request.
+          required: true
+        - label: This request preserves human approval for every new disavow entry.
+          required: true
+        - label: I did not include credentials, customer data, private audit output, or other sensitive information.
+          required: true

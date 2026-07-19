@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit/security/advisories/new
+    about: Report exploitable defects, credential exposure, and other sensitive security issues privately.
+  - name: Installation guide
+    url: https://www.growthlimit.com/tools/toxic-backlink-checker#setup
+    about: Review the supported Docker and Node.js installation workflow before opening an issue.
