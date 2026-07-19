@@ -35,8 +35,8 @@ Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for ma
 ### 2. Download the repository
 
 ```bash
-git clone https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker.git
-cd growthlimit-toxic-backlink-checker
+git clone https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit.git
+cd toxic-backlink-checker-growthlimit
 cp .env.example .env.local
 ```
 
@@ -70,8 +70,8 @@ Open <http://localhost:3000>. To stop it, press `Ctrl+C`. Audit JSON persists un
 Install the current Node.js 22 LTS release and Git. Then:
 
 ```bash
-git clone https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker.git
-cd growthlimit-toxic-backlink-checker
+git clone https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit.git
+cd toxic-backlink-checker-growthlimit
 npm ci
 cp .env.example .env.local
 npm run build
@@ -144,7 +144,7 @@ Paste this instruction into ChatGPT, Claude, Codex, Cursor, or another coding ag
 
 ```text
 Install the Toxic Backlink Checker by GrowthLimit.com locally from:
-https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker
+https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit
 
 1. Read README.md, SECURITY.md, .env.example, package.json, Dockerfile, and compose.yaml before running commands.
 2. Check whether Docker Desktop and Node.js 22 LTS are installed. Prefer Docker when available. Ask before installing system software.

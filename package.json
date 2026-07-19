@@ -1,5 +1,5 @@
 {
-  "name": "growthlimit-toxic-backlink-checker",
+  "name": "toxic-backlink-checker-growthlimit",
   "version": "1.0.0",
   "private": false,
   "description": "Local-first backlink evidence audit with DataForSEO retrieval, representative-page inspection, human review, and draft disavow exports.",
@@ -8,10 +8,10 @@
   "homepage": "https://www.growthlimit.com/tools/toxic-backlink-checker",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker.git"
+    "url": "git+https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit.git"
   },
   "bugs": {
-    "url": "https://github.com/GrowthLimitOpenSource/growthlimit-toxic-backlink-checker/issues"
+    "url": "https://github.com/GrowthLimitOpenSource/toxic-backlink-checker-growthlimit/issues"
   },
   "keywords": [
     "seo",
