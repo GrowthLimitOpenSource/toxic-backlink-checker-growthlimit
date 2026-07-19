@@ -9,4 +9,12 @@ describe("audit grouping", () => {
   it("deduplicates rows and excludes self-domain links", () => { const external = row(1); const self = row(2, { domain_from: "blog.example.com", url_from: "https://blog.example.com/post" }); const groups = groupBacklinks([external, external, self], normalizeOptions({ target: "example.com" })); expect(groups).toHaveLength(1); expect(groups[0].links).toHaveLength(1); });
   it("flags a repeated commercial sitewide cluster for human review without auto-disavowing", () => { const groups = groupBacklinks(Array.from({ length: 60 }, (_, i) => row(i)), normalizeOptions({ target: "example.com" })); expect(groups[0].classification).toBe("REVIEW"); expect(groups[0].approved).toBe(false); expect(groups[0].evidence.map((x) => x.code)).toEqual(expect.arrayContaining(["REPEATED_ANCHOR", "COMMERCIAL_ANCHORS", "SITEWIDE_PATTERN"])); });
   it("keeps a small ordinary domain without unsupported evidence", () => { const groups = groupBacklinks([row(1, { domain_from: "publisher.com", url_from: "https://publisher.com/story", anchor: "Example research" })], normalizeOptions({ target: "example.com" })); expect(groups[0].classification).toBe("KEEP"); });
+  it("merges duplicate source attribution without treating unknown follow state as nofollow", () => {
+    const vendor = row(1);
+    const imported = { ...vendor, dofollow: null, sources: ["Google Search Console"] };
+    const groups = groupBacklinks([vendor, imported], normalizeOptions({ target: "example.com" }));
+    expect(groups[0].links).toHaveLength(1);
+    expect(groups[0].sourceNames).toEqual(["DataForSEO", "Google Search Console"]);
+    expect(groups[0].evidence.map((item) => item.code)).not.toContain("NOFOLLOW_ONLY");
+  });
 });

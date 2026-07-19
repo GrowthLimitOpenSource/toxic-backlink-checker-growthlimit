@@ -69,7 +69,7 @@ export function normalizeVendorRow(row: Record<string, unknown>): BacklinkRow {
     textPost: text(row.text_post),
     dofollow: bool(row.dofollow), isNew: bool(row.is_new), isLost: bool(row.is_lost),
     firstSeen: text(row.first_seen) || null, lastSeen: text(row.last_seen) || null,
-    rank: num(row.rank), domainRank: num(row.domain_from_rank), pageRank: num(row.page_from_rank), source: row,
+    rank: num(row.rank), domainRank: num(row.domain_from_rank), pageRank: num(row.page_from_rank), source: row, sources: ["DataForSEO"],
   };
 }
 

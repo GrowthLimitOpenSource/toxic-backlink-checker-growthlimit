@@ -1,8 +1,8 @@
 {
   "name": "toxic-backlink-checker-growthlimit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
-  "description": "Local-first backlink evidence audit with DataForSEO retrieval, representative-page inspection, human review, and draft disavow exports.",
+  "description": "Local-first backlink evidence audit with multi-source CSV reconciliation, audit history, representative-page inspection, human review, and draft disavow exports.",
   "license": "Apache-2.0",
   "author": "GrowthLimit.com",
   "homepage": "https://www.growthlimit.com/tools/toxic-backlink-checker",

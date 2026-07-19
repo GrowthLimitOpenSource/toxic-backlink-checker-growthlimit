@@ -1,3 +1,24 @@
+export type ImportSource = "Google Search Console" | "Ahrefs" | "Semrush" | "Majestic" | "Moz" | "Generic CSV";
+
+export interface ImportFile {
+  name: string;
+  content: string;
+}
+
+export interface ImportSummary {
+  fileName: string;
+  source: ImportSource;
+  rowsRead: number;
+  rowsAccepted: number;
+  rowsRejected: number;
+}
+
+export interface DecisionEvent {
+  at: string;
+  classification: Classification;
+  approved: boolean;
+}
+
 export type Classification = "KEEP" | "REVIEW" | "REMOVE_URL" | "DISAVOW_URL" | "DISAVOW_DOMAIN";
 
 export interface BacklinkRow {
@@ -8,7 +29,7 @@ export interface BacklinkRow {
   anchor: string;
   textPre: string;
   textPost: string;
-  dofollow: boolean;
+  dofollow: boolean | null;
   isNew: boolean;
   isLost: boolean;
   firstSeen: string | null;
@@ -17,6 +38,7 @@ export interface BacklinkRow {
   domainRank: number | null;
   pageRank: number | null;
   source: Record<string, unknown>;
+  sources: string[];
 }
 
 export interface Evidence {
@@ -47,6 +69,7 @@ export interface DomainGroup {
   targets: Array<{ value: string; count: number; share: number }>;
   followCount: number;
   sitewideTargets: number;
+  sourceNames: string[];
   evidence: Evidence[];
   inspection?: PageInspection;
   classification: Classification;
@@ -54,6 +77,7 @@ export interface DomainGroup {
   humanChecks: string[];
   note: string;
   approved: boolean;
+  decisionHistory: DecisionEvent[];
 }
 
 export interface ExistingDisavow {
@@ -66,6 +90,7 @@ export interface ExistingDisavow {
 export interface AuditOptions {
   target: string;
   includeSubdomains: boolean;
+  includeDataForSeo: boolean;
   maxBacklinks: number;
   inspectPages: number;
   concurrency: number;
@@ -83,11 +108,43 @@ export interface AuditReport {
   createdAt: string;
   target: string;
   options: AuditOptions;
-  source: { provider: "DataForSEO"; endpoint: string; rowsRetrieved: number; cost: number | null; tasks: number };
+  source: { provider: string; endpoint: string; rowsRetrieved: number; cost: number | null; tasks: number };
   summary: Record<string, unknown> | null;
   groups: DomainGroup[];
+  imports: ImportSummary[];
   existingDisavow: ExistingDisavow;
   proposedDisavow: string;
   warnings: string[];
   llm: { enabled: boolean; provider: string | null; model: string | null; groupsReviewed: number };
+}
+
+export interface AuditSummary {
+  id: string;
+  target: string;
+  createdAt: string;
+  groupCount: number;
+  reviewCount: number;
+  approvedCount: number;
+  sourceNames: string[];
+}
+
+export interface GroupChange {
+  domain: string;
+  previousClassification: Classification;
+  currentClassification: Classification;
+  previousApproved: boolean;
+  currentApproved: boolean;
+  evidenceAdded: string[];
+  evidenceRemoved: string[];
+}
+
+export interface AuditComparison {
+  currentAuditId: string;
+  previousAuditId: string | null;
+  previousCreatedAt: string | null;
+  newDomains: string[];
+  removedDomains: string[];
+  changedGroups: GroupChange[];
+  disavowAdded: string[];
+  disavowRemoved: string[];
 }

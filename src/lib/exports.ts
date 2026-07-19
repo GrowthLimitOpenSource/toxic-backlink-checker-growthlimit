@@ -10,7 +10,9 @@ export const AUDIT_COLUMNS = [
   "follow_links",
   "top_anchor",
   "evidence",
+  "sources",
   "note",
+  "decision_history",
 ] as const;
 
 export function auditRows(report: AuditReport): Array<Array<string | number | boolean>> {
@@ -23,7 +25,9 @@ export function auditRows(report: AuditReport): Array<Array<string | number | bo
     group.followCount,
     group.anchors[0]?.value || "",
     group.evidence.map((evidence) => `${evidence.code}: ${evidence.detail}`).join(" | "),
+    group.sourceNames.join(" | "),
     group.note,
+    group.decisionHistory.map((event) => `${event.at}: ${event.classification} (${event.approved ? "approved" : "not approved"})`).join(" | "),
   ]);
 }
 
@@ -64,7 +68,7 @@ export function buildAuditXlsx(report: AuditReport): Uint8Array {
           <col min="2" max="2" width="20" customWidth="1"/>
           <col min="3" max="6" width="14" customWidth="1"/>
           <col min="7" max="7" width="28" customWidth="1"/>
-          <col min="8" max="9" width="60" customWidth="1"/>
+          <col min="8" max="11" width="60" customWidth="1"/>
         </cols>
         <sheetData>${sheetRows}</sheetData>
       </worksheet>`),

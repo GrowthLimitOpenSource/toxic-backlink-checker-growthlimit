@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Toxic Backlink Checker by GrowthLimit.com",
   description:
-    "Open-source, local-first DataForSEO backlink audit, evidence review, and draft disavow workflow.",
+    "Open-source, local-first multi-source backlink reconciliation, audit history, evidence review, and draft disavow workflow.",
 };
 
 export default function RootLayout({

@@ -1,25 +1,28 @@
 # Toxic Backlink Checker by GrowthLimit.com
 
-A local-first backlink audit application. It retrieves backlink rows from DataForSEO, deduplicates and groups them, identifies evidence patterns, inspects representative public pages, supports optional LLM summaries, preserves an existing disavow file, and exports HTML, CSV, XLSX, JSON, and a human-reviewed Google-format draft.
+A local-first backlink audit application. It can retrieve rows from DataForSEO, import and reconcile CSV exports from Google Search Console, Ahrefs, Semrush, Majestic, Moz, or generic sources, preserve source attribution, inspect representative public pages, and compare each audit with the prior run for the same domain. Decisions and approvals retain an audit trail. The application preserves an existing disavow file and exports HTML, CSV, XLSX, JSON, and a human-reviewed Google-format draft.
 
 The methodology comes from Growth Limit's [evidence-based toxic backlink guide](https://www.growthlimit.com/blog/identifying-toxic-backlinks). The full illustrated setup guide is at [growthlimit.com/tools/toxic-backlink-checker](https://www.growthlimit.com/tools/toxic-backlink-checker).
 
 ## Important limits
 
-- DataForSEO's index differs from Search Console and other vendors.
+- No backlink index is complete. Use DataForSEO, imported Search Console or vendor exports, or both; absence from one source is not proof that a link disappeared.
 - Vendor authority, spam, and toxicity metrics are investigation signals. They do not prove Google counts a link or that a link caused a ranking change.
 - The checker does not determine whether a link violates Google policy.
 - The checker never uploads a disavow file. A new upload in Search Console replaces the prior file, so preserve and review it.
-- DataForSEO and optional LLM requests use your accounts and may cost money.
+- DataForSEO is optional when valid CSV backlink rows are imported. DataForSEO and optional LLM requests use your accounts and may cost money.
 
 ## What it produces
 
-- DataForSEO summary and paginated backlink retrieval
-- Normalized, deduplicated referring-domain groups
-- Anchor, target, follow, new/lost, and sitewide-pattern evidence
+- Optional DataForSEO summary and paginated backlink retrieval
+- CSV import for Google Search Console, Ahrefs, Semrush, Majestic, Moz, and generic source/target URL columns
+- Cross-source normalization, deduplication, and preserved source attribution
+- Referring-domain groups with anchor, target, follow, new/lost, and sitewide-pattern evidence
 - SSRF-protected representative-page inspection
 - `KEEP`, `REVIEW`, `REMOVE_URL`, `DISAVOW_URL`, and `DISAVOW_DOMAIN` review states
 - Existing-disavow parsing, deduplication, self-domain protection, and merge
+- Saved audit history with new, missing, evidence-changed, decision-changed, approval-changed, and draft-disavow comparisons
+- Per-domain decision and approval history
 - Interactive local review with explicit approval for every disavow entry
 - HTML, CSV, XLSX, JSON, and draft-disavow downloads
 - CLI workflow and browser workflow
@@ -42,13 +45,13 @@ cp .env.example .env.local
 
 The commands above clone the official public repository. Confirm that the repository owner is `GrowthLimitOpenSource` before entering credentials or running the application.
 
-### 3. Create DataForSEO credentials
+### 3. Configure DataForSEO only if using live API retrieval
 
-Create or sign in to a DataForSEO account through [this Growth Limit referral link](https://dataforseo.com/?aff=238016), open the API access area, and copy the API login and password. These may differ from the password used to sign into the website.
+You can run CSV-only audits without DataForSEO. For live retrieval, create or sign in to a DataForSEO account through [this Growth Limit referral link](https://dataforseo.com/?aff=238016), open the API access area, and copy the API login and password. These may differ from the password used to sign into the website.
 
 Growth Limit may receive 25% of the first payment made by a customer who registers through the referral link and purchases an eligible DataForSEO product. Growth Limit uses this revenue to pay for API testing and maintenance. The commission is not a promised customer discount. Check DataForSEO's current checkout and affiliate terms before paying.
 
-Open `.env.local` in a plain-text editor:
+For live retrieval, open `.env.local` in a plain-text editor:
 
 ```dotenv
 DATAFORSEO_LOGIN=your_api_login
@@ -63,7 +66,7 @@ Do not paste credentials into source files, issues, screenshots, chat, or commit
 docker compose up --build
 ```
 
-Open <http://localhost:3000>. To stop it, press `Ctrl+C`. Audit JSON persists under `./data/audits`.
+Open <http://localhost:3000>. To stop it, press `Ctrl+C`. Audit JSON, comparisons, and decision history persist under `./data/audits`.
 
 ## Node.js setup
 
@@ -87,11 +90,13 @@ Open <http://localhost:3000>. For a development server with reload, use `npm run
 3. Start with 1,000 rows and 20 page inspections to validate credentials and output cheaply.
 4. Paste the complete current disavow file. This allows the checker to preserve comments and entries and avoid accidental replacement.
 5. Leave LLM review disabled for the first run. The deterministic audit is complete without it.
-6. Run the audit. DataForSEO returns at most 1,000 rows per request, so larger audits paginate.
-7. Open every `REVIEW` group. Check acquisition history, the representative page, legitimate publisher context, and Search Console's Manual Actions report.
-8. Choose a decision. `REMOVE_URL` records outreach or qualification work but does not enter the disavow draft.
-9. For `DISAVOW_URL` or `DISAVOW_DOMAIN`, click **Approve for draft**. The application never bulk-approves domain entries.
-10. Download and archive JSON, CSV, HTML, and the draft text file. Review the draft line by line before considering a manual Search Console upload.
+6. Optionally import CSV exports from Search Console, Ahrefs, Semrush, Majestic, Moz, or another tool with source and target URL columns. You can disable DataForSEO when an import contains valid backlink rows.
+7. Run the audit. Duplicate source/target/anchor rows merge, while every reporting source remains attached to the evidence.
+8. Review the comparison with the preceding audit for the same domain: new and missing domains, changed evidence or decisions, approval changes, and added or removed draft entries.
+9. Open every `REVIEW` group. Check acquisition history, the representative page, legitimate publisher context, and Search Console's Manual Actions report.
+10. Choose a decision. `REMOVE_URL` records outreach or qualification work but does not enter the disavow draft.
+11. For `DISAVOW_URL` or `DISAVOW_DOMAIN`, click **Approve for draft**. The application records the decision history and never bulk-approves domain entries.
+12. Download and archive JSON, CSV, HTML, XLSX, and the draft text file. Review the draft line by line before considering a manual Search Console upload.
 
 ## Decision meanings
 
